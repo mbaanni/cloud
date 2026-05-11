@@ -1,11 +1,14 @@
 
 provider "aws" {
-  region = "us-east-1"
+  region = var.aws_region
 }
 
 
 resource "aws_vpc" "inception_vpc" {
   cidr_block = "10.0.0.0/16"
+    tags = {
+    Name = "terraform-vpc"
+  }
 }
 
 resource "aws_internet_gateway" "igw" {
@@ -79,7 +82,8 @@ data "aws_ami" "ubuntu" {
 }
 
 
-resource "aws_instance" "ubuntu" {
+
+resource "aws_instance" "lmachina" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t3.micro"
 
@@ -89,4 +93,16 @@ resource "aws_instance" "ubuntu" {
   tags = {
     Name = "ubuntu-22-terraform"
   }
+  /*provisioner "remote-exec" {
+    inline = ["echo 'waiting for ssh to be ready'"]
+    connection {
+      type = "ssh"
+      user = "ubuntu"
+      private_key = file("taxis.pem")
+      host = self.public_ip
+    }
+  }
+  provisioner "local-exec" {
+    command = "ansible-playbook -i ${self.public_ip}, --private-key taxis.pem -u ubuntu playbooks/ansible.yml"
+  }*/
 }

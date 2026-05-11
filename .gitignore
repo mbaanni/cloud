@@ -1,0 +1,8 @@
+taxis.pem
+baani.cer
+mbaanni_accessKeys.csv
+.terraform
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+env
