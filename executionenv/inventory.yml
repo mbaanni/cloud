@@ -1,6 +1,0 @@
-inception:
-  hosts:
-    44.220.144.52:
-    vars:
-      ansible_user: ubuntu
-      ansible_ssh_private_key_file: key.pam

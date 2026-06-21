@@ -66,25 +66,9 @@ resource "aws_security_group" "ssh_tls" {
   }
 }
 
-data "aws_ami" "ubuntu" {
-  most_recent = true
-  owners      = ["099720109477"]
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
-
-
 
 resource "aws_instance" "lmachina" {
-  ami           = data.aws_ami.ubuntu.id
+  ami           = "ami-0b6d9d3d33ba97d99"
   instance_type = "t3.micro"
 
   subnet_id              = aws_subnet.inception_subnet.id
@@ -93,16 +77,14 @@ resource "aws_instance" "lmachina" {
   tags = {
     Name = "ubuntu-22-terraform"
   }
-  /*provisioner "remote-exec" {
-    inline = ["echo 'waiting for ssh to be ready'"]
-    connection {
-      type = "ssh"
-      user = "ubuntu"
-      private_key = file("taxis.pem")
-      host = self.public_ip
-    }
-  }
-  provisioner "local-exec" {
-    command = "ansible-playbook -i ${self.public_ip}, --private-key taxis.pem -u ubuntu playbooks/ansible.yml"
-  }*/
+
+}
+
+resource "local_file" "inventory" {
+  filename = "${path.module}/playbooks/inventory.ini"
+
+  content = <<EOF
+  [myhosts]
+  ${aws_instance.lmachina.public_ip} ansible_user=${var.osuser} ansible_ssh_private_key_file=${path.module}/keys/taxis.pem
+  EOF
 }

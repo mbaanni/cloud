@@ -1,62 +1,38 @@
+---
 - name: My play test
   hosts: myhosts
   become: yes
   tasks:
-  - name: Docker
-    ansible.builtin.apt:
-      name:
-        - ca-certificates
-        - curl
-        - gnupg
-        - lsb-release
-      state: present
-      update_cache: yes
-
-  - name: create keyrings directory
-    file:
-      path: /etc/apt/keyrings
-      state: directory
-      mode : 755
-  
-  - name: Download Docker GPG key
-    ansible.builtin.get_url:
-      url: https://download.docker.com/linux/ubuntu/gpg
-      dest: /etc/apt/keyrings/docker.asc
-      mode: "0644"
-
-  - name: Dearmor Docker GPG key
-    ansible.builtin.command:
-      cmd: gpg --dearmor -o /etc/apt/keyrings/docker.gpg /etc/apt/keyrings/docker.asc
-      creates: /etc/apt/keyrings/docker.gpg 
-
-  - name: Add Docker repository
-    ansible.builtin.apt_repository:
-      repo: >
-          deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg]
-          https://download.docker.com/linux/ubuntu
-          {{ ansible_lsb.codename }} stable
-      state: present
-      filename: docker
-  - name: Update apt cache
-    ansible.builtin.apt:
-      update_cache: yes
+  - name: Update package cache
+    ansible.builtin.package:
+      state: latest
 
   - name: Install Docker Engine
-    ansible.builtin.apt:
-      name:
-        - docker-ce
-        - docker-ce-cli
-        - containerd.io
-        - docker-buildx-plugin
-        - docker-compose-plugin
+    ansible.builtin.package:
+      name: docker.io
       state: present
+      update_cache: yes
+
+  - name: install Make
+    ansible.builtin.package:
+      name: Make
+      state: present
+
   - name: Enable and start Docker service
     ansible.builtin.service:
       name: docker
       enabled: true
       state: started
+
   - name: Add current user to docker group
     ansible.builtin.user:
       name: "{{ ansible_user }}"
       groups: docker
       append: yes
+  - name: Clone inception project
+    ansible.builtin.git:
+     repo: https://github.com/mbaanni/inception.git
+     dest: /home/"{{ ansible_user }}"
+     clone: yes
+    notify: Build Project
+    

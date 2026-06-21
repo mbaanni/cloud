@@ -4,6 +4,10 @@ variable aws_region {
   description = "aws region"
 }
 
+variable osuser {
+  default = "ubuntu"
+  description = "default user name"
+}
 variable testlist {
     type = list(string)
     default = [ "10.0.0.1",
