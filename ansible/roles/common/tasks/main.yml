@@ -1,0 +1,11 @@
+---
+# tasks file for roles/common
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Install common packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ common_packages }}" 
