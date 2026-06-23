@@ -1,10 +1,16 @@
 ---
 # tasks file for roles/docker
-- name: Install packages 
+- name: Uninstall unofficial packages
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{ unofficial_packages }}"
+
+- name: Install packages
   ansible.builtin.apt:
     name: "{{ item }}"
     state: present
-  loop: "{{ package }}"
+  loop: "{{ packages }}"
 
 - name: Create a keyrings directory 
   ansible.builtin.file:
@@ -12,14 +18,19 @@
     state: directory
     mode: '0755'
 
-- name: add docker GPG
+- name: Add docker GPG
   ansible.builtin.get_url:
     url: https://download.docker.com/linux/ubuntu/gpg
     dest: /etc/apt/keyrings/docker.asc
     mode: u+r,g+r,o+r
 
-- name: docker APT repository
-    ansible.builtin.apt_repository:
-      repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
-      state: present
+- name: Docker APT repository
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    state: present
 
+- name: Install docker and docker compose
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ docker_packages }}"

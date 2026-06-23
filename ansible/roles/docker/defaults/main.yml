@@ -1,4 +1,17 @@
 ---
 # defaults file for roles/docker
-package:
+unofficial_packages:
+  - docker.io 
+  - docker-compose 
+  - docker-compose-v2 
+  - docker-doc 
+  - podman-docker 
+  - containerd 
+  - runc
+
+packages:
   - ca-certificates
+
+docker_packages:
+  - docker-ce
+  - docker-compose-plugin
