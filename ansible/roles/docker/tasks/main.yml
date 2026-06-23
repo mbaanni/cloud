@@ -34,3 +34,8 @@
     name: "{{ item }}"
     state: present
   loop: "{{ docker_packages }}"
+
+- name: Ensure docker is started
+  ansible.builtin.service:
+    name: docker
+    state: started
