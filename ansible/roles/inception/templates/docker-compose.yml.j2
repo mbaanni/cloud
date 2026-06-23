@@ -1,0 +1,78 @@
+services:
+  nginx:
+    image: nginx:mbaanni
+    build: requirements/nginx
+    container_name: nginx
+    depends_on:
+      - wordpress
+    volumes:
+      - wordpress:/var/www/html
+
+    ports:
+      - "443:443"
+      - "80:80"
+    networks:
+      - testo
+    restart: always
+
+  wordpress:
+    image: wordpress:mbaanni
+    build: requirements/wordpress
+    container_name: wordpress
+    depends_on:
+      - mariadb
+    volumes:
+      - wordpress:/var/www/html
+    networks:
+      - testo
+    environment:
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_NAME: "{{ DATABASE_NAME }}"
+      WORDPRESS_DB_USER: "{{ DATABASE_USER }}"
+      WORDPRESS_DB_PASSWORD: "{{ DATABASE_PASS }}"
+    restart: always
+
+  mariadb:
+    image: mariadb:mbaanni
+    build: requirements/mariadb
+    container_name: mariadb
+    volumes:
+      - mariadb:/var/lib/mysql
+    networks:
+      - testo
+    environment:
+      MYSQL_DATABASE: "{{ DATABASE_NAME }}"
+      MYSQL_USER: "{{ DATABASE_USER }}"
+      MYSQL_PASSWORD: "{{ DATABASE_PASS }}"
+      MYSQL_ROOT_PASSWORD: "{{ DATABASE_ROOT_PASS }}"
+    restart: always
+
+  my-php-admin:
+    image: phpmyadmin:apache
+    container_name: phpmyadmin
+    depends_on:
+      - mariadb
+    networks:
+      - testo
+    environment:
+      PMA_HOST: "{{ DATABASE_NAME }}"
+      PMA_PORT: "{{ DATABASE_PORT }}"
+
+volumes:
+  wordpress:
+    driver: local
+    driver_opts:
+      type: none
+      device: "{{ DATA_DIR }}/wordpress"
+      o: bind
+
+  mariadb:
+    driver: local
+    driver_opts:
+      type: none
+      device: "{{ DATA_DIR }}/mariadb"
+      o: bind
+
+networks:
+  testo:
+    driver: bridge
