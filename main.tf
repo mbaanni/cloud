@@ -81,10 +81,11 @@ resource "aws_instance" "lmachina" {
 }
 
 resource "local_file" "inventory" {
-  filename = "${path.module}/playbooks/inventory.ini"
+  filename = "${path.module}/ansible/host_vars/cloud-1.yaml"
 
   content = <<EOF
-  [myhosts]
-  ${aws_instance.lmachina.public_ip} ansible_user=${var.osuser} ansible_ssh_private_key_file=${path.module}/keys/taxis.pem
+  ansible_host: ${aws_instance.lmachina.public_ip}
+  ansible_user: ${var.osuser}
+  ansible_ssh_private_key_file: ../keys/taxis.pem
   EOF
 }

@@ -5,6 +5,7 @@ mbaanni_accessKeys.csv
 .terraform.lock.hcl
 terraform.tfstate
 terraform.tfstate.backup
+errored.tfstate
 env
 keys
 venv

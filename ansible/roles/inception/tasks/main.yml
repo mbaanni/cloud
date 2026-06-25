@@ -5,11 +5,14 @@
     repo: 'https://github.com/mbaanni/Inception-cloud'
     dest: /home/{{ ansible_user }}/inception
 
-- name: Create volumes folders
+- name: Create volume folders
   ansible.builtin.file:
     path: "{{ item }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
     state: directory
-  loop: 
+    mode: "0755"
+  loop:
     - "{{ DATA_DIR }}"
     - "{{ DATA_DIR }}/wordpress"
     - "{{ DATA_DIR }}/mariadb"

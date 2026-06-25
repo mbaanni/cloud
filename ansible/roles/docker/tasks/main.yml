@@ -39,3 +39,9 @@
   ansible.builtin.service:
     name: docker
     state: started
+
+- name: Add current user to docker group
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: yes
