@@ -58,6 +58,14 @@ resource "aws_security_group" "ssh_tls" {
     cidr_blocks = ["0.0.0.0/0"]
 
   }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+
+  }
   egress {
     from_port   = 0
     to_port     = 0
@@ -77,6 +85,11 @@ resource "aws_instance" "lmachina" {
   tags = {
     Name = "ubuntu-22-terraform"
   }
+
+  user_data = <<-EOF
+              cd ansible
+              ansible-playbook ansible/main.yml --ask-vault-pass
+              EOF
 
 }
 
