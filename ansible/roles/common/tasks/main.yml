@@ -8,4 +8,11 @@
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
-  loop: "{{ common_packages }}" 
+  loop: "{{ common_packages }}"
+
+- name: Run DDNS script
+  ansible.builtin.script: domain.sh
+  environment:
+    ansible_host: "{{ ansible_host }}"
+    domain_name : "{{ domain_name }}"
+    token       : "{{ token }}"

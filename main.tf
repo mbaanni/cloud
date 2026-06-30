@@ -99,6 +99,6 @@ resource "local_file" "inventory" {
   content = <<EOF
   ansible_host: ${aws_instance.lmachina.public_ip}
   ansible_user: ${var.osuser}
-  ansible_ssh_private_key_file: ../keys/taxis.pem
+  ansible_ssh_private_key_file: ${var.privatekey}
   EOF
 }

@@ -8,6 +8,12 @@ variable osuser {
   default = "ubuntu"
   description = "default user name"
 }
+
+variable privatekey{
+  default = "../keys/taxis.pem"
+  description = "default privatekey"
+}
+
 variable testlist {
     type = list(string)
     default = [ "10.0.0.1",

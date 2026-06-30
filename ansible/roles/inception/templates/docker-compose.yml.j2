@@ -65,6 +65,7 @@ services:
     environment:
       PMA_HOST: "{{ DATABASE_NAME }}"
       PMA_PORT: "{{ DATABASE_PORT }}"
+    restart: always
 
 volumes:
   wordpress:

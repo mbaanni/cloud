@@ -1,11 +1,9 @@
 taxis.pem
 baani.cer
 mbaanni_accessKeys.csv
-.terraform
-.terraform.lock.hcl
+.terraform*
 terraform.tfstate
 terraform.tfstate.backup
 errored.tfstate
 env
-keys
 venv
