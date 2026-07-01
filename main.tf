@@ -95,7 +95,7 @@ resource "aws_instance" "lmachina" {
 
   ami = data.aws_ami.ubuntu.id
   instance_type = "t3.micro"
-
+  count = 3
   subnet_id              = aws_subnet.inception_subnet.id
   vpc_security_group_ids = [aws_security_group.ssh_tls.id]
   key_name               = var.key_name
@@ -107,10 +107,7 @@ resource "aws_instance" "lmachina" {
 
 resource "local_file" "inventory" {
   filename = "${path.module}/ansible/host_vars/cloud-1.yaml"
-
   content = <<EOF
-ansible_host: ${aws_instance.lmachina.public_ip}
-ansible_user: ${var.osuser}
-ansible_ssh_private_key_file: ${var.ssh_key_path}
+  ${join([for instance in aws_instance.lmachina: ansible_host: ${aws_instance.lmachina.public_ip} ansible_user: ${var.osuser} ansible_ssh_private_key_file: ${var.ssh_key_path}],"\n")}
 EOF
 }
