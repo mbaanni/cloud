@@ -16,7 +16,10 @@
     dest: /usr/local/bin/domain.sh
     mode: "0755"
 
-- name: Seet cron job for DDNS script
+- name: Run DDNS script
+  ansible.builtin.script: domain.sh
+
+- name: Set cron job for DDNS script
   ansible.builtin.cron:
     name: "DNS update"
     special_time: reboot
