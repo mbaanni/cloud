@@ -9,9 +9,15 @@ variable osuser {
   description = "default user name"
 }
 
-variable privatekey{
-  default = "../keys/taxis.pem"
+variable ssh_key_path {
+  default = "~/.ssh/taxis.pem"
   description = "default privatekey"
+}
+
+variable key_name {
+  type = string
+  default = "taxis"
+  description = "name of public key in aws"
 }
 
 variable testlist {
