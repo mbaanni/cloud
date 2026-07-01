@@ -1,3 +1,0 @@
-#!/bin/bash
-
-curl "https://www.duckdns.org/update?domains=$domain_name.duckdns.org&token=$token&ip=$ansible_host"

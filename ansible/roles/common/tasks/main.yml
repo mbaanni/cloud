@@ -10,9 +10,14 @@
     state: present
   loop: "{{ common_packages }}"
 
-- name: Run DDNS script
-  ansible.builtin.script: domain.sh
-  environment:
-    ansible_host: "{{ ansible_host }}"
-    domain_name : "{{ domain_name }}"
-    token       : "{{ token }}"
+- name: Deploy DDNS script
+  ansible.builtin.template:
+    src: domain.sh.j2
+    dest: /usr/local/bin/domain.sh
+    mode: "0755"
+
+- name: Seet cron job for DDNS script
+  ansible.builtin.cron:
+    name: "DNS update"
+    special_time: reboot
+    job: "/usr/local/bin/domain.sh"
